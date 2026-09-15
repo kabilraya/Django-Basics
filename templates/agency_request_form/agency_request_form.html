@@ -513,8 +513,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     stateInput.addEventListener("change", function () {
         const stateCode = normalizeStateCode(this.value);
-        agencyInput.value = "";
-        ecgainsInput.value = "";
+        
         suggestions.innerHTML = "";
 
         if (!stateCode) {
