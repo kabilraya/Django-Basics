@@ -11,7 +11,9 @@ class AgencyCreate(CreateView):
     # fields = '__all__'
 
     form_class = AgencyRequestForm
-    success_url = reverse_lazy("agency_create")
+    success_url = reverse_lazy("agency_request_list") #reverse_lazy takes the name in the urlconf and maps it
+    #to the equivalent path
+    #In function based views -> use return redirect("name_of_the_url_conf")
 
     
 

@@ -16,10 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-
+from homepage.views import ListAgencyRequest
 from agency_request_form.views import AgencyCreate
+from agency_request_form.urls import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     
-    path("",AgencyCreate.as_view(),name="agency_create")
+    path("agency-request/",AgencyCreate.as_view(),name="agency_create"),
+    # path("agency/",path()),
+    path("",ListAgencyRequest.as_view(),name = "agency_request_list")
 ]

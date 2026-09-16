@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Agency Requests</title>
+</head>
+<body>
+
+<h1>Agency Requests</h1>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>ECGAINS</th>
+            <th>Agency Name</th>
+            <th>Has Bids?</th>
+            <th>Developer</th>
+            <th>URL</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for agency_info in agencies_object %}
+            <tr>
+                <td>{{ agency_info.ecgains }}</td>
+                <td>{{ agency_info.agency_name }}</td>
+                <td>{{ agency_info.has_bids }}</td>
+                <td>{{ agency_info.developer }}</td>
+                <td>{{ agency_info.url }}</td>
+                <td>
+                    <!-- action links/buttons -->
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="6">No agency requests found.</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</body>
+</html>
