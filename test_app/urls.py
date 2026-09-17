@@ -18,11 +18,14 @@ from django.contrib import admin
 from django.urls import path
 from homepage.views import ListAgencyRequest
 from agency_request_form.views import AgencyCreate
-from agency_request_form.urls import *
+# from agency_request_form.urls import *
+from agency_request_form.views import update_request,delete_request
 urlpatterns = [
     path('admin/', admin.site.urls),
     
     path("agency-request/",AgencyCreate.as_view(),name="agency_create"),
     # path("agency/",path()),
-    path("",ListAgencyRequest.as_view(),name = "agency_request_list")
+    path("",ListAgencyRequest.as_view(),name = "agency_request_list"),
+    path("update/<int:pk>",update_request,name="update_agency"),
+    path("delete/<int:pk>",delete_request,name = "delete_agency")
 ]

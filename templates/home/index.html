@@ -6,7 +6,9 @@
 <body>
 
 <h1>Agency Requests</h1>
-
+<button>
+    <a href="{% url 'agency_create' %}">CREATE REQUEST</a>
+</button>
 <table border="1">
     <thead>
         <tr>
@@ -27,7 +29,12 @@
                 <td>{{ agency_info.developer }}</td>
                 <td>{{ agency_info.url }}</td>
                 <td>
-                    <!-- action links/buttons -->
+                    <a href = '{% url "update_agency" agency_info.pk %}'>
+                        Update
+                    </a>
+                    <a href = '{% url "delete_agency" agency_info.pk %}'>
+                        DELETE
+                    </a>
                 </td>
             </tr>
         {% empty %}
