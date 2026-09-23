@@ -1,14 +1,15 @@
 from django.db import models
 
 # Create your models here.
+
+class Developer(models.Model):
+    developer_name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.developer_name #the database will return the name as a string instead of Developer Object(1)
 class AgencyRequest(models.Model):
     #First define the choices for dropdowns
-    DEVELOPER_CHOICES = [
-        #(db_value , display value)
-        ("kabil" , "Kabil Raya"),
-        ("john" , "John Doe"),
-        ("sam", "Sam Jackson")
-    ]
+    
     BID_TYPE_CHOICES = [
         ("new", "New"),
         ("update" , "Update"),
@@ -33,7 +34,7 @@ class AgencyRequest(models.Model):
     ecgains = models.CharField(max_length = 100)
     state = models.CharField(max_length=10)
     contact_email = models.EmailField()
-    developer = models.CharField(max_length=100 , choices=DEVELOPER_CHOICES)
+    developer = models.ForeignKey(Developer,on_delete=models.CASCADE)
     module_name = models.CharField(max_length=100)
     bid_type = models.CharField(max_length=50,choices=BID_TYPE_CHOICES)
     procurement_type = models.CharField(max_length = 100 , choices = PROCUREMENT_TYPE_CHOICES)
