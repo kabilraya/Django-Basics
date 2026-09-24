@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'agency_request_form',
-    'homepage'
+    'homepage',
+    'order_management'
 ]
 
 MIDDLEWARE = [
