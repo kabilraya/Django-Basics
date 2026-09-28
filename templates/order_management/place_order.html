@@ -1,0 +1,89 @@
+{% extends "order_management/base.html" %}
+{% block content %}
+<h1>Place an Order</h1>
+
+<form method="post">
+    {% csrf_token %}
+
+    <p>
+        <label for="user_name">User Name</label><br>
+        <input type="text" id="user_name" name="user_name" required>
+    </p>
+
+    <p>
+        <label for="shipment_location">Shipment Location</label><br>
+        <input type="text" id="shipment_location" name="shipment_location" required>
+    </p>
+
+    <h3>Products</h3>
+    <table border="1" cellpadding="6">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Rate</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody id="product-rows">
+            <tr class="product-row">
+                <td><input type="text" name="product_name[]" required></td>
+                <td><input type="number" name="quantity[]" class="qty" min="1" required></td>
+                <td><input type="number" name="rate[]" class="rate" min="0" step="0.01" required></td>
+                <td><input type="text" class="row-total" readonly></td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3" align="right"><strong>Grand Total</strong></td>
+                <td><input type="text" id="grand-total" readonly></td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <br>
+    <button type="button" id="add-product">Add Product</button>
+    <button type="submit">Submit Order</button>
+</form>
+
+<a href="{% url 'home' %}">Back to Home</a>
+
+<script>
+    const tbody = document.getElementById("product-rows");
+    const grandTotalBox = document.getElementById("grand-total");
+
+    function updateGrandTotal() {
+        let sum = 0;
+        tbody.querySelectorAll(".row-total").forEach(function (box) {
+            sum += parseFloat(box.value) || 0;
+        });
+        grandTotalBox.value = sum.toFixed(2);
+    }
+
+    function attachRowListeners(row) {
+        const qty = row.querySelector(".qty");
+        const rate = row.querySelector(".rate");
+        const rowTotal = row.querySelector(".row-total");
+
+        function updateRowTotal() {
+            const value = (parseFloat(qty.value) || 0) * (parseFloat(rate.value) || 0);
+            rowTotal.value = value.toFixed(2);
+            updateGrandTotal();
+        }
+
+        qty.addEventListener("input", updateRowTotal);
+        rate.addEventListener("input", updateRowTotal);
+    }
+
+    document.getElementById("add-product").addEventListener("click", function () {
+        const newRow = tbody.querySelector(".product-row").cloneNode(true);
+        newRow.querySelectorAll("input").forEach(function (input) {
+            input.value = "";
+        });
+        tbody.appendChild(newRow);
+        attachRowListeners(newRow);
+    });
+
+    tbody.querySelectorAll(".product-row").forEach(attachRowListeners);
+</script>
+{% endblock %}

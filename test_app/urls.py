@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from homepage.views import ListAgencyRequest
 from agency_request_form.views import AgencyCreate
 # from agency_request_form.urls import *
@@ -27,5 +27,6 @@ urlpatterns = [
     # path("agency/",path()),
     path("",ListAgencyRequest.as_view(),name = "agency_request_list"),
     path("update/<int:pk>",update_request,name="update_agency"),
-    path("delete/<int:pk>",delete_request,name = "delete_agency")
+    path("delete/<int:pk>",delete_request,name = "delete_agency"),
+    path("orders/",include("order_management.urls"))
 ]

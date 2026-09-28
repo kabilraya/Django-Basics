@@ -1,0 +1,7 @@
+{% extends "order_management/base.html" %}
+{% block content %}
+<h1>Order Management</h1>
+
+<a href="{% url 'order_history' %}"><button type="button">View Order History</button></a>
+<a href="{% url 'place_order' %}"><button type="button">Place an Order</button></a>
+{% endblock %}
