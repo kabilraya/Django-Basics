@@ -18,7 +18,15 @@ def create_order_number():
 
 #Orders model
 class Orders(models.Model):
-    user = models.ForeignKey(Users, on_delete=models.CASCADE, related_name="orders")
+    user = models.ForeignKey(Users, on_delete=models.CASCADE, related_name="orders") 
+    #related_name defines the opposite relation suppose
+    #In this model the relation is Orders -> User not Users -> Orders 
+    # So order.user exists automatically 
+    # We can get the users of the a particular order but we can't get the order details from the user
+    #So we can't just use the order object while querying the Users schema
+    # Here the related_name makes it possible
+    # "orders" can be used to query the orders schema from the users table as user = Users.objects.get(name = "Kabil")
+    # now we can do user.orders.all() to get all the orders of the user named "Kabil"
     order_number = models.CharField(max_length=50, unique=True, editable = False, default=create_order_number)
     order_date = models.DateTimeField(auto_now_add=True)
     shipment_location = models.CharField(max_length=100)

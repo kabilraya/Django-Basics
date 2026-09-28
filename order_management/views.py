@@ -46,13 +46,13 @@ def order_history(request):
 
 def order_view(request, order_id):
     order = get_object_or_404(Orders, id=order_id)
-    items = OrderItem.objects.filter(order=order)
+    items = OrderItems.objects.filter(order=order)
     return render(request, "order_management/order_view.html", {"order": order, "items": items})
 
 
 def order_update(request, order_id):
     order = get_object_or_404(Orders, id=order_id)
-    items = OrderItem.objects.filter(order=order)
+    items = OrderItems.objects.filter(order=order)
 
     if request.method == "POST":
         user_name = request.POST.get("user_name", "").strip()
@@ -71,7 +71,7 @@ def order_update(request, order_id):
             items.delete()  # simplest sync: wipe and recreate from submitted rows
             for name, qty, rate in zip(product_names, quantities, rates):
                 if name.strip():
-                    OrderItem.objects.create(
+                    OrderItems.objects.create(
                         order=order,
                         product_name=name.strip(),
                         quantity=int(qty),
