@@ -5,12 +5,8 @@
 <table border="1" cellpadding="6">
     <thead>
         <tr>
-            <th>Order Number</th>
-            <th>User</th>
-            <th>Date</th>
-            <th>Shipment Location</th>
-            <th>Grand Total</th>
-            <th>Actions</th>
+            <th>Order Number</th><th>User</th><th>Date</th>
+            <th>Shipment Location</th><th>Grand Total</th><th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -22,16 +18,13 @@
             <td>{{ order.shipment_location }}</td>
             <td>{{ order.grand_total }}</td>
             <td>
-                {# Uncomment each button once its view and URL exist #}
-                {# <a href="{% url 'order_view' order.id %}"><button type="button">View</button></a> #}
-                {# <a href="{% url 'order_update' order.id %}"><button type="button">Update</button></a> #}
-                {# <a href="{% url 'order_delete' order.id %}"><button type="button">Delete</button></a> #}
+                <a href="{% url 'view_order' order.id %}"><button type="button">View</button></a>
+                <a href="{% url 'order_update' order.id %}"><button type="button">Update</button></a>
+                <a href="{% url 'order_delete' order.id %}"><button type="button">Delete</button></a>
             </td>
         </tr>
         {% empty %}
-        <tr>
-            <td colspan="6">No orders yet.</td>
-        </tr>
+        <tr><td colspan="6">No orders yet.</td></tr>
         {% endfor %}
     </tbody>
 </table>

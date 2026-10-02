@@ -1,0 +1,23 @@
+{% extends "order_management/base.html" %}
+{% block content %}
+<h1>Delete Order {{ order.order_number }}?</h1>
+<p>User: {{ order.user.name }}</p>
+<p>Shipment Location: {{ order.shipment_location }}</p>
+<p>Grand Total: {{ order.grand_total }}</p>
+
+<table border="1" cellpadding="6">
+    <thead><tr><th>Product</th><th>Quantity</th><th>Rate</th><th>Total</th></tr></thead>
+    <tbody>
+        {% for item in items %}
+        <tr><td>{{ item.product_name }}</td><td>{{ item.quantity }}</td><td>{{ item.rate }}</td><td>{{ item.total }}</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<form method="post">
+    {% csrf_token %}
+    <p>This permanently deletes this order and all its products.</p>
+    <button type="submit">Yes, Delete</button>
+</form>
+<a href="{% url 'view_order' order.id %}">Cancel</a>
+{% endblock %}

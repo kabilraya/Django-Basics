@@ -1,39 +1,47 @@
 {% extends "order_management/base.html" %}
 {% block content %}
-<h1>Place an Order</h1>
+<h1>Update Order {{ order.order_number }}</h1>
 
 <form method="post">
     {% csrf_token %}
-
     <p>
         <label for="user_name">User Name</label><br>
-        <input type="text" id="user_name" name="user_name" required>
+        <input type="text" id="user_name" name="user_name" value="{{ order.user.name }}" required>
     </p>
-
     <p>
         <label for="shipment_location">Shipment Location</label><br>
-        <input type="text" id="shipment_location" name="shipment_location" required>
+        <input type="text" id="shipment_location" name="shipment_location" value="{{ order.shipment_location }}" required>
     </p>
 
     <h3>Products</h3>
     <table border="1" cellpadding="6">
         <thead>
-            <tr>
-                <th>Product Name</th>
-                <th>Quantity</th>
-                <th>Rate</th>
-                <th>Total</th>
-                <th></th>
-            </tr>
+            <tr><th>Product Name</th><th>Quantity</th><th>Rate</th><th>Total</th><th></th></tr>
         </thead>
         <tbody id="product-rows">
+            {% for item in items %}
             <tr class="product-row">
-                <td><input type="text" name="product_name[]" required></td>
+                <td>
+                    <input type="hidden" name="item_id[]" value="{{ item.id }}">
+                    <input type="text" name="product_name[]" value="{{ item.product_name }}" required>
+                </td>
+                <td><input type="number" name="quantity[]" class="qty" value="{{ item.quantity }}" min="1" required></td>
+                <td><input type="number" name="rate[]" class="rate" value="{{ item.rate }}" min="0" step="0.01" required></td>
+                <td><input type="text" class="row-total" value="{{ item.total }}" readonly></td>
+                <td><button type="button" class="delete-row">Delete</button></td>
+            </tr>
+            {% empty %}
+            <tr class="product-row">
+                <td>
+                    <input type="hidden" name="item_id[]" value="">
+                    <input type="text" name="product_name[]" required>
+                </td>
                 <td><input type="number" name="quantity[]" class="qty" min="1" required></td>
                 <td><input type="number" name="rate[]" class="rate" min="0" step="0.01" required></td>
                 <td><input type="text" class="row-total" readonly></td>
                 <td><button type="button" class="delete-row">Delete</button></td>
             </tr>
+            {% endfor %}
         </tbody>
         <tfoot>
             <tr>
@@ -46,10 +54,10 @@
 
     <br>
     <button type="button" id="add-product">Add Product</button>
-    <button type="submit">Submit Order</button>
+    <button type="submit">Save Changes</button>
 </form>
 
-<a href="{% url 'home' %}">Back to Home</a>
+<a href="{% url 'view_order' order.id %}">Cancel</a>
 
 <script>
     const tbody = document.getElementById("product-rows");
@@ -57,9 +65,7 @@
 
     function updateGrandTotal() {
         let sum = 0;
-        tbody.querySelectorAll(".row-total").forEach(function (box) {
-            sum += parseFloat(box.value) || 0;
-        });
+        tbody.querySelectorAll(".row-total").forEach(box => sum += parseFloat(box.value) || 0);
         grandTotalBox.value = sum.toFixed(2);
     }
 
@@ -70,11 +76,9 @@
         const deleteBtn = row.querySelector(".delete-row");
 
         function updateRowTotal() {
-            const value = (parseFloat(qty.value) || 0) * (parseFloat(rate.value) || 0);
-            rowTotal.value = value.toFixed(2);
+            rowTotal.value = ((parseFloat(qty.value) || 0) * (parseFloat(rate.value) || 0)).toFixed(2);
             updateGrandTotal();
         }
-
         qty.addEventListener("input", updateRowTotal);
         rate.addEventListener("input", updateRowTotal);
 
@@ -83,24 +87,21 @@
                 row.remove();
                 updateGrandTotal();
             } else {
-                // last remaining row: clear it instead of leaving zero rows
-                row.querySelectorAll("input").forEach(function (input) {
-                    input.value = "";
-                });
-                updateGrandTotal();
+                // last remaining row: clear it instead of leaving an empty table
+                row.querySelectorAll("input").forEach(i => { if (i.type !== "hidden") i.value = ""; });
             }
         });
     }
 
     document.getElementById("add-product").addEventListener("click", function () {
         const newRow = tbody.querySelector(".product-row").cloneNode(true);
-        newRow.querySelectorAll("input").forEach(function (input) {
-            input.value = "";
-        });
+        newRow.querySelectorAll("input[type=text], input[type=number]").forEach(i => i.value = "");
+        newRow.querySelector("input[type=hidden]").value = "";   // new row has no item_id
         tbody.appendChild(newRow);
         attachRowListeners(newRow);
     });
 
     tbody.querySelectorAll(".product-row").forEach(attachRowListeners);
+    updateGrandTotal();
 </script>
 {% endblock %}
